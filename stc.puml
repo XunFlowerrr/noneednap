@@ -1,0 +1,412 @@
+@startuml
+class states.MenuState {
++ <<Create>> MenuState(GameStateManager)
++ void update()
++ void input(MouseHandler,KeyHandler)
++ void render(GraphicsContext)
+}
+class graphics.Animation {
+- Image[] frames
+- int currentFrame
+- int totalFrames
+- int updateCount
+- int updatesPerFrameChange
+- int timesPlayed
++ <<Create>> Animation(Image[])
++ <<Create>> Animation()
++ Image[] getFrames()
++ void setFrames(Image[])
++ void setFrames(Image)
++ int getCurrentFrame()
++ void setCurrentFrame(int)
++ int getTotalFrames()
++ void setTotalFrames(int)
++ int getTimesPlayed()
++ void setTimesPlayed(int)
++ void update()
++ int getUpdatesPerFrameChange()
++ void setUpdatesPerFrameChange(int)
++ int getUpdateCount()
++ void setUpdateCount(int)
++ int getFrame()
++ void setFrame(int)
++ Image getCurrentAnimationFrame()
++ boolean hasPlayedOnce()
++ boolean hasPlayed(int)
+}
+class tiles.TileManager {
++ {static} int tileWidth
++ {static} int tileHeight
++ {static} ArrayList<TileMap> tileMaps
++ <<Create>> TileManager()
++ <<Create>> TileManager(String)
++ {static} int getTileWidth()
++ {static} void setTileWidth(int)
++ {static} int getTileHeight()
++ {static} void setTileHeight(int)
++ {static} ArrayList<TileMap> getTileMaps()
++ {static} void setTileMaps(ArrayList<TileMap>)
+- void addTileMap(String,int,int)
++ void render(GraphicsContext)
+}
+class entity.Enemy {
+- AABB sensingRange
+- int sensingRadius
++ <<Create>> Enemy(Sprite,Vector2f,int)
++ util.AABB getSensingRange()
++ void setSensingRange(util.AABB)
++ int getSensingRadius()
++ void setSensingRadius(int)
++ void update(AABB)
++ void render(GraphicsContext)
+}
+class states.GameOverState {
++ <<Create>> GameOverState(GameStateManager)
++ void update()
++ void input(MouseHandler,KeyHandler)
++ void render(GraphicsContext)
+}
+class graphics.Sprite {
+- int TILE_SIZE
++ int width
++ int height
+- Image spriteSheetImage
+- Image[][] spritesInSheet
+- int spriteWidthInSheet
+- int spriteHeightInSheet
++ <<Create>> Sprite(String)
++ <<Create>> Sprite(String,int,int)
++ {static} void drawArray(GraphicsContext,ArrayList<Image>,Vector2f,int,int,int,int)
++ {static} void drawText(GraphicsContext,Font,String,Vector2f)
++ {static} void drawText(GraphicsContext,Font,String,Vector2f,int)
++ {static} void drawText(GraphicsContext,Font,String,Vector2f,Color)
++ {static} void drawText(GraphicsContext,Font,String,Vector2f,int,Color)
++ int getTILE_SIZE()
++ int getWidth()
++ void setWidth(int)
++ int getHeight()
++ void setHeight(int)
++ int getSpriteHeightInSheet()
++ void setSpriteHeightInSheet(int)
++ void setSize(int,int)
+- void loadSpriteArray()
++ Image getSpriteSheetImage()
++ void setSpriteSheetImage(Image)
++ WritableImage getSpriteImageFromSheet(int,int)
++ Image getSpriteArray(int,int)
++ Image[] getSpriteArray(int)
++ Image[][] getSpritesInSheet()
++ void setSpritesInSheet(Image[][])
++ int getSpriteWidthInSheet()
++ void setSpriteWidthInSheet(int)
+}
+abstract class tiles.block.Block {
+# int blockWidth
+# int blockHeight
+# Image blockImage
+# Vector2f blockPosition
++ <<Create>> Block(Image,Vector2f,int,int)
++ {abstract}boolean update(AABB)
++ {abstract}boolean isInside(AABB)
++ void render(GraphicsContext)
++ int getBlockWidth()
++ void setBlockWidth(int)
++ int getBlockHeight()
++ void setBlockHeight(int)
++ Image getBlockImage()
++ void setBlockImage(Image)
++ Vector2f getBlockPosition()
++ void setBlockPosition(Vector2f)
+}
+abstract class tiles.TileMap {
++ {abstract}void render(GraphicsContext)
+}
+class tiles.TileMapNorm {
+- ArrayList<Block> blocks
++ <<Create>> TileMapNorm(String,Sprite,int,int,int,int,int)
++ void render(GraphicsContext)
+}
+class states.PauseState {
++ <<Create>> PauseState(GameStateManager)
++ void update()
++ void input(MouseHandler,KeyHandler)
++ void render(GraphicsContext)
+}
+class game.GameLauncher {
++ {static} int WIDTH
++ {static} int HEIGHT
+- GraphicsContext graphicsContext
+- MouseHandler mouseInputHandler
+- KeyHandler keyboardInputHandler
+- GameStateManager gameStateManager
+~ AnimationTimer gameLoopTimer
++ {static} void main(String[])
++ void start(Stage)
+- void update()
+- void input(MouseHandler,KeyHandler)
+- void render()
+}
+class states.GameStateManager {
++ {static} Vector2f mapDimensions
+- ArrayList<GameState> gameStates
++ <<Create>> GameStateManager()
++ {static} Vector2f getMapDimensions()
++ {static} void setMapDimensions(Vector2f)
++ ArrayList<GameState> getGameStates()
++ void pop(int)
++ void add(int)
++ void addAndPop(int)
++ void update()
++ void input(MouseHandler,KeyHandler)
++ void render(GraphicsContext)
+}
+enum states.STATES {
++  PLAY_STATE
++  MENU_STATE
++  PAUSE_STATE
++  GAME_OVER_STATE
+}
+class entity.Player {
++ <<Create>> Player(Sprite,Vector2f,int)
++ void movePlayer()
+- void resetPlayerPosition()
++ void update()
++ void render(GraphicsContext)
++ void input(MouseHandler,KeyHandler)
+}
+class tiles.block.HoleBlock {
++ <<Create>> HoleBlock(Image,Vector2f,int,int)
++ boolean update(AABB)
++ boolean isInside(AABB)
++ void render(GraphicsContext)
+}
+class tiles.TileMapObj {
++ {static} HashMap<String,Block> tmo_blocks
+- int defaultBlockID
++ <<Create>> TileMapObj(String,Sprite,int,int,int,int,int)
++ {static} HashMap<String,Block> getTmo_blocks()
++ {static} void setTmo_blocks(HashMap<String,Block>)
++ int getDefaultBlockID()
++ void render(GraphicsContext)
+}
+class util.KeyHandler {
++ boolean isUpPressed
++ boolean isDownPressed
++ boolean isLeftPressed
++ boolean isRightPressed
++ <<Create>> KeyHandler(Canvas)
++ boolean allKeysReleased()
++ boolean isUpPressed()
++ void setUpPressed(boolean)
++ boolean isDownPressed()
++ void setDownPressed(boolean)
++ boolean isLeftPressed()
++ void setLeftPressed(boolean)
++ boolean isRightPressed()
++ void setRightPressed(boolean)
++ void handle(KeyEvent)
+}
+class util.Vector2f {
++ {static} float worldCoordinateX
++ {static} float worldCoordinateY
++ float vectorCoordinateX
++ float vectorCoordinateY
++ <<Create>> Vector2f()
++ <<Create>> Vector2f(Vector2f)
++ <<Create>> Vector2f(float,float)
++ {static} float getWorldCoordinateX()
++ {static} void setWorldCoordinateX(float)
++ {static} float getWorldCoordinateY()
++ {static} void setWorldCoordinateY(float)
++ {static} void setWorldCoordinates(float,float)
++ Vector2f getWorldVar()
++ String toString()
++ float getVectorCoordinateX()
++ void setVectorCoordinateX(float)
++ float getVectorCoordinateY()
++ void setVectorCoordinateY(float)
+}
+abstract class entity.Entity {
+# boolean isMoveUp
+# Animation animation
+# Sprite sprite
+# Vector2f position
+# int size
+# EntityDirection currentDirection
+# AnimationType currentAnimation
+# AABB hitBoundary
+# AABB boundary
+# float dx
+# float dy
+# float maxSpeed
+# float acceleration
+# float deceleration
+# TileCollision tileCollision
++ <<Create>> Entity(Sprite,Vector2f,int)
++ util.TileCollision getTileCollision()
++ void setTileCollision(util.TileCollision)
++ void setAnimation(AnimationType,Image[],int)
++ void setAnimation(AnimationType,Image,int)
++ void setHitBoxDirection()
++ void update()
+- void handleEntityAnimation()
++ void input(KeyHandler,MouseHandler)
++ {abstract}void render(GraphicsContext)
++ int getSize()
++ void setSize(int)
++ Animation getAnimation()
++ void setAnimation(Animation)
++ boolean isMoveUp()
++ void setMoveUp(boolean)
++ boolean isMoveDown()
++ void setMoveDown(boolean)
++ boolean isMoveLeft()
++ void setMoveLeft(boolean)
++ boolean isMoveRight()
++ void setMoveRight(boolean)
++ boolean isFallen()
++ void setFallen(boolean)
++ Sprite getSprite()
++ void setSprite(Sprite)
++ Vector2f getPosition()
++ void setPosition(Vector2f)
++ EntityDirection getCurrentDirection()
++ void setCurrentDirection(EntityDirection)
++ AnimationType getCurrentAnimation()
++ void setCurrentAnimation(AnimationType)
++ AABB getHitBoundary()
++ void setHitBoundary(AABB)
++ AABB getBoundary()
++ void setBoundary(AABB)
++ float getDx()
++ void setDx(float)
++ float getDy()
++ void setDy(float)
++ float getMaxSpeed()
++ void setMaxSpeed(float)
++ float getAcceleration()
++ void setAcceleration(float)
++ float getDeceleration()
++ void setDeceleration(float)
+}
+enum entity.EntityDirection {
++  RIGHT
++  LEFT
++  DOWN
++  UP
++  FALLEN
+}
+enum entity.AnimationType {
++  IDLE
++  MOVE_UP
++  MOVE_DOWN
++  MOVE_RIGHT
++  MOVE_LEFT
++  FALLING
+}
+class states.PlayState {
++ {static} Vector2f mapDimensions
+- Font font
+- Player player
+- TileManager tileManager
+- Enemy enemy
++ <<Create>> PlayState(GameStateManager)
++ {static} Vector2f getMapDimensions()
++ {static} void setMapDimensions(Vector2f)
++ Font getFont()
++ Player getPlayer()
++ TileManager getTileManager()
++ Enemy getEnemy()
++ void setEnemy(Enemy)
++ void update()
++ void input(MouseHandler,KeyHandler)
++ void render(GraphicsContext)
+}
+class util.MouseHandler {
++ <<Create>> MouseHandler(Canvas)
++ void handle(MouseEvent)
+}
+class tiles.block.ObjBlock {
++ <<Create>> ObjBlock(Image,Vector2f,int,int)
++ boolean update(AABB)
++ boolean isInside(AABB)
++ void render(GraphicsContext)
+}
+abstract class states.GameState {
+- GameStateManager gsm
++ <<Create>> GameState(GameStateManager)
++ {abstract}void update()
++ {abstract}void input(MouseHandler,KeyHandler)
++ {abstract}void render(GraphicsContext)
+}
+class util.TileCollision {
+- Entity entity
+- Block block
++ <<Create>> TileCollision(Entity)
++ Entity getEntity()
++ void setEntity(Entity)
++ Block getBlock()
++ void setBlock(Block)
++ boolean isEntityCollidingWithTile(float,float)
+- boolean isEntityCollidingWithHole(float,float,float,float,Block)
+}
+class util.AABB {
+- Vector2f boundingBoxPosition
+- float boundingBoxXOffset
+- float boundingBoxYOffset
+- float boundingBoxWidth
+- float boundingBoxHeight
+- float boundingBoxRadius
+- int boundingBoxSize
+- Entity associatedEntity
++ <<Create>> AABB(Vector2f,int,int)
++ <<Create>> AABB(Vector2f,int)
++ Vector2f getBoundingBoxPosition()
++ void setBoundingBoxPosition(Vector2f)
++ float getBoundingBoxWidth()
++ void setBoundingBoxWidth(float)
++ float getBoundingBoxHeight()
++ void setBoundingBoxHeight(float)
++ float getBoundingBoxRadius()
++ void setBoundingBoxRadius(float)
++ void setBox(Vector2f,int,int)
++ void setCircle(Vector2f,int,Entity)
++ float getXOffset()
++ void setXOffset(float)
++ float getYOffset()
++ void setYOffset(float)
++ float getBoundingBoxXOffset()
++ void setBoundingBoxXOffset(float)
++ float getBoundingBoxYOffset()
++ void setBoundingBoxYOffset(float)
++ int getBoundingBoxSize()
++ void setBoundingBoxSize(int)
++ Entity getAssociatedEntity()
++ void setAssociatedEntity(Entity)
++ boolean isBoundingBoxColliding(AABB)
++ boolean isEnteringCircularBoundingBox(AABB)
++ boolean isCollidingWithCircularBoundingBox(AABB)
+}
+class tiles.block.NormBlock {
++ <<Create>> NormBlock(Image,Vector2f,int,int)
++ boolean update(AABB)
++ boolean isInside(AABB)
++ void render(GraphicsContext)
+}
+
+
+states.GameState <|-- states.MenuState
+entity.Entity <|-- entity.Enemy
+states.GameState <|-- states.GameOverState
+tiles.TileMap <|-- tiles.TileMapNorm
+states.GameState <|-- states.PauseState
+javafx.application.Application <|-- game.GameLauncher
+entity.Entity <|-- entity.Player
+tiles.block.Block <|-- tiles.block.HoleBlock
+tiles.TileMap <|-- tiles.TileMapObj
+javafx.event.EventHandler <|.. util.KeyHandler
+states.GameState <|-- states.PlayState
+javafx.event.EventHandler <|.. util.MouseHandler
+tiles.block.Block <|-- tiles.block.ObjBlock
+tiles.block.Block <|-- tiles.block.NormBlock
+@enduml
